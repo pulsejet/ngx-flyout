@@ -44,7 +44,7 @@ export class FlyoutComponent implements OnInit, OnChanges {
 
   /**
    * Whether flyout is open or not
-   * 
+   *
    * @memberof FlyoutComponent
    */
   @Input()
@@ -52,7 +52,7 @@ export class FlyoutComponent implements OnInit, OnChanges {
 
   /**
    * Whether to show close button or not
-   * 
+   *
    * @memberof FlyoutComponent
    */
   @Input()
@@ -60,15 +60,31 @@ export class FlyoutComponent implements OnInit, OnChanges {
 
   /**
    * Additional css classes to style flyout
-   * 
+   *
    * @memberof FlyoutComponent
    */
   @Input()
   flyoutClasses = [];
 
   /**
+   * List of classes used on the flyout element
+   *
+   * @memberof FlyoutComponent
+   */
+  flyoutClassesElem = [];
+
+  /**
+   * Dict of styles used on the flyout element
+   *
+   * @memberof FlyoutComponent
+   */
+  flyoutStylesElem: { transform: string} = {
+    transform: ''
+  };
+
+  /**
    * Whether to show backdrop or not
-   * 
+   *
    * @memberof FlyoutComponent
    */
   @Input()
@@ -76,7 +92,7 @@ export class FlyoutComponent implements OnInit, OnChanges {
 
   /**
    * Whether to close flyout when clicked on backdrop
-   * 
+   *
    * @memberof FlyoutComponent
    */
   @Input()
@@ -84,26 +100,25 @@ export class FlyoutComponent implements OnInit, OnChanges {
 
   /**
    * Additional css classes to style backdrop
-   * 
+   *
    * @memberof FlyoutComponent
    */
   @Input()
-  backdropClasses = [];
+  backdropClasses: string[] = [];
+
+  /**
+   * Class list used directly on the element
+   *
+   * @memberof FlyoutComponent
+   */
+  backdropClassesElem: string[] = [];
 
   /**
    * Flyout element reference
    *
    * @memberof FlyoutComponent
    */
-  @ViewChild('flyout') flyout: ElementRef;
-
-  /**
-   * Backdrop element reference
-   *
-   * @memberof FlyoutComponent
-   */
-  @ViewChild('backdrop') backdrop: ElementRef;
-
+  @ViewChild('flyout', { read: ElementRef, static: true }) flyout: ElementRef;
 
   /**
    * Default css classes which will be applied on flyout
@@ -153,7 +168,7 @@ export class FlyoutComponent implements OnInit, OnChanges {
     if (this.open) {
       classList.push('open');
     }
-    this.flyout.nativeElement.className = classList.join(' ');
+    this.flyoutClassesElem = classList;
   }
 
   /**
@@ -163,9 +178,10 @@ export class FlyoutComponent implements OnInit, OnChanges {
    */
   _updateFlyoutTransform() {
     if (this.open) {
-      this.flyout.nativeElement.style.transform = 'translate3d(0, 0, 0)';
+      this.flyoutStylesElem.transform = 'translate3d(0, 0, 0)';
     } else {
       const element = this.flyout.nativeElement;
+
       const dimension = {
         left: parseInt(element.style.left, 10) || 0,
         right: parseInt(element.style.right, 10) || 0,
@@ -177,16 +193,16 @@ export class FlyoutComponent implements OnInit, OnChanges {
 
       switch (this.position) {
         case 'top':
-          this.flyout.nativeElement.style.transform = 'translate3d(0, -' + dimension.height + 'px, 0)';
+          this.flyoutStylesElem.transform = 'translate3d(0, -' + dimension.height + 'px, 0)';
           break;
         case 'bottom':
-          this.flyout.nativeElement.style.transform = 'translate3d(0, ' + dimension.height + 'px, 0)';
+          this.flyoutStylesElem.transform = 'translate3d(0, ' + dimension.height + 'px, 0)';
           break;
         case 'left':
-          this.flyout.nativeElement.style.transform = 'translate3d(-' + dimension.width + 'px, 0, 0)';
+          this.flyoutStylesElem.transform = 'translate3d(-' + dimension.width + 'px, 0, 0)';
           break;
         default:
-          this.flyout.nativeElement.style.transform = 'translate3d(' + dimension.width + 'px, 0, 0)';
+          this.flyoutStylesElem.transform = 'translate3d(' + dimension.width + 'px, 0, 0)';
           break;
       }
     }
@@ -202,7 +218,7 @@ export class FlyoutComponent implements OnInit, OnChanges {
     if (this.showBackdrop && this.open) {
       classList.push('open');
     }
-    this.backdrop.nativeElement.className = classList.join(' ');
+    this.backdropClassesElem = classList;
   }
 
   /**
